@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.jonmid.segundoparcial.Adapters.UserAdapter;
 import com.jonmid.segundoparcial.Models.User;
+import com.jonmid.segundoparcial.Parser.Json;
 
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClickButton(){
         if (isOnLine()){
             MyTask task = new MyTask();
-            task.execute("");
+            task.execute("https://jsonplaceholder.typicode.com/users");
         }else {
             Toast.makeText(this, "Sin conexión", Toast.LENGTH_SHORT).show();
         }
@@ -66,11 +68,21 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            loader.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         protected String doInBackground(String... params) {
-            return null;
+
+            String content = null;
+            try {
+                content = HttpManager.getData(params[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return content;
+
         }
 
         @Override
@@ -81,7 +93,25 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+
+            try {
+                myUser = Json.parserJsonUser(s);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            cargarDatos();
+            loader.setVisibility(View.GONE);
+
         }
+    }
+
+    public void cargarDatos(){
+
+        myAdapter = new UserAdapter(getApplicationContext(),myUser);
+
+        myRecycler.setAdapter(myAdapter);
+
     }
 
     // Metodo para para inicializar el menu en el Toolbar

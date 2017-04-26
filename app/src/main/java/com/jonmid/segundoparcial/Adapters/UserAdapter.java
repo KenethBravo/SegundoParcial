@@ -1,5 +1,6 @@
 package com.jonmid.segundoparcial.Adapters;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -33,7 +34,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        //
+        // holder.myText.setText(myPost.get(position).getTitle());
+
+        holder.myNameUser.setText(myUser.get(position).getUsername());
+        holder.myPhone.setText(myUser.get(position).getPhone());
+
     }
 
     @Override
@@ -44,11 +49,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView myLogo;
         TextView myNameUser;
+        TextView myPhone;
 
         // Constructor
         public ViewHolder(View item)  {
             super(item);
-            //
+
+            myLogo = (ImageView) item.findViewById(R.id.logo);
+            myNameUser = (TextView) item.findViewById(R.id.txt_name_user);
+            myPhone = (TextView) item.findViewById(R.id.txt_phone_user);
+
         }
     }
 }
